@@ -2,4 +2,12 @@
     <string name="app_name">Sirene</string>
     <string name="text_recherche">Rechercher une entreprise</string>
     <string name="no_result_found">No results found</string>
+    <string name="detail_company_activity">Entreprise</string>
+    <string name="company_name_detail">Entreprise : %s</string>
+    <string name="company_activity_detail">Activité principale : %s</string>
+    <string name="company_adress_detail">Adresse : %s</string>
+    <string name="company_siren_detail">SIREN : %s</string>
+    <string name="company_siret_detail">SIRET : %s</string>
+    <string name="company_date_creation_detail">Date de début d\'activité : %s</string>
+    <string name="company_juridical_detail">Statut : %s</string>
 </resources>

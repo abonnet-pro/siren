@@ -1,5 +1,6 @@
 package exam.abonnet.sirene
 
+import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity()
                     listCompany
                 )
                 listCompanySearch.visibility = View.VISIBLE
+                textNoResult.visibility = View.INVISIBLE
 
                 if(listCompany.isEmpty())
                 {
@@ -115,6 +117,13 @@ class MainActivity : AppCompatActivity()
             {
                 QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, textQuery).execute(query)
             }
+        }
+
+        listCompanySearch.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+            intent = Intent(this@MainActivity, DetailCompanyActivity::class.java)
+            val company = listCompanySearch.getItemAtPosition(i) as Company
+            intent.putExtra("company", company)
+            startActivity(intent)
         }
     }
 }

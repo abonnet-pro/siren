@@ -2,14 +2,20 @@ package exam.abonnet.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Company(@PrimaryKey var id:Long? = null,
                    var companyName:String = "",
+                   var activity: String = "",
+                   var adress: String = "",
+                   var postalCode: String = "",
+                   var department:String = "",
+                   var dateStartActivity: String = "",
                    var sirenNumber: String = "",
                    var siretNumber:String = "",
-                   var department:String = "",
-                   var archive:Boolean = false)
+                   var status: String = "",
+                   var archive:Boolean = false): Serializable
 {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

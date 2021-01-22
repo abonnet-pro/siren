@@ -52,6 +52,11 @@ class SirenService
                                 "siret" -> company.siretNumber = reader.nextString()
                                 "nom_raison_sociale" -> company.companyName = reader.nextString()
                                 "departement" -> company.department = reader.nextString()
+                                "libelle_activite_principale_entreprise" -> company.activity = reader.nextString()
+                                "geo_adresse" -> company.adress = reader.nextString()
+                                "code_postal" -> company.postalCode = reader.nextString()
+                                "date_debut_activite" -> company.dateStartActivity = reader.nextString()
+                                "libelle_nature_juridique_entreprise" -> company.status = reader.nextString()
                                 else -> reader.skipValue()
                             }
                         }
