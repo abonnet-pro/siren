@@ -32,8 +32,7 @@ class MainActivity : AppCompatActivity()
         {
             val query = params[0] ?: return emptyList()
 
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH)
-            val dateRequest = sdf.format(Date())
+            val dateRequest = SirenDatabase.sdf.format(Date())
             val research = Research(request = query, dateRequest = dateRequest, textQuery = textQuery)
             val searchId = researchDAO.insert(research)
 
@@ -90,6 +89,8 @@ class MainActivity : AppCompatActivity()
         val editSearchCompany = findViewById<EditText>(R.id.editSearchCompany)
         val listCompanySearch = findViewById<ListView>(R.id.listCompanySearch)
 
+        checkMemoryResearch()
+
         val svc = SirenService()
 
         buttonSearchCompany.setOnClickListener {
@@ -124,6 +125,25 @@ class MainActivity : AppCompatActivity()
             val company = listCompanySearch.getItemAtPosition(i) as Company
             intent.putExtra("company", company)
             startActivity(intent)
+        }
+    }
+
+    private fun checkMemoryResearch()
+    {
+        val listResearchActive = researchDAO.getAllResearchActive()
+        for (research in listResearchActive)
+        {
+            if (research.dateRequest < SirenDatabase.sdf.format(Date()))
+            {
+                research.archive = true
+                researchDAO.update(research)
+
+                val listCompanyBySearch = researchDAO.getCompanyByResearch(research.id!!)
+                listCompanyBySearch.forEach {
+                    it.archive = true
+                    companyDAO.update(it)
+                }
+            }
         }
     }
 }

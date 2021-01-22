@@ -21,4 +21,7 @@ interface ResearchDAO
 
     @Query("select Company.* from company inner join link on Company.id = Link.idCompany inner join Research on Research.id = Link.idResearch where Research.id = :researchId")
     fun getCompanyByResearch(researchId: Long): List<Company>
+
+    @Query("SELECT * FROM Research WHERE archive = 0")
+    fun getAllResearchActive(): List<Research>
 }
