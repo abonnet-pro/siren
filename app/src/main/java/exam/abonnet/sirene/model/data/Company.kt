@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity
-data class Company(@PrimaryKey var id:Long? = null,
+data class Company(@PrimaryKey(autoGenerate = true) var id:Long? = null,
+                   var idApi:Long? = null,
                    var companyName:String = "",
                    var activity: String = "",
                    var adress: String = "",

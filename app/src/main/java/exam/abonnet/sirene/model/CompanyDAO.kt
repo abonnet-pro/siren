@@ -15,6 +15,9 @@ interface CompanyDAO
     @Delete
     fun delete(company: Company)
 
-    @Query("SELECT COUNT(*) FROM Company WHERE id = :companyId AND archive = 0")
-    fun checkCompanyExist(companyId: Long): Int
+    @Query("SELECT COUNT(*) FROM Company WHERE idApi = :companyIdApi AND archive = 0")
+    fun checkCompanyExist(companyIdApi: Long): Int
+
+    @Query("SELECT id FROM Company WHERE idApi = :companyIdApi AND archive = 0")
+    fun getIdCompany(companyIdApi: Long): Long
 }

@@ -1,11 +1,16 @@
 package exam.abonnet.sirene
 
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import exam.abonnet.sirene.model.*
 import exam.abonnet.sirene.model.data.Company
 import exam.abonnet.sirene.model.data.Link
@@ -13,13 +18,20 @@ import exam.abonnet.sirene.model.data.Research
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity()
 {
-
     private lateinit var researchDAO: ResearchDAO
     private lateinit var companyDAO: CompanyDAO
     private lateinit var linkDAO: LinkDAO
+
+    private lateinit var progressBar: ProgressBar
+    private lateinit var textNoResult: TextView
+    private lateinit var buttonSearchCompany: ImageButton
+    private lateinit var editSearchCompany: EditText
+    private lateinit var listCompanySearch: ListView
+    private lateinit var buttonReconnection: Button
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                   private val listCompanySearch: ListView,
@@ -40,8 +52,17 @@ class MainActivity : AppCompatActivity()
 
             for(company in listCompany)
             {
-                val companyId = company.id ?: continue
-                if(companyDAO.checkCompanyExist(companyId) == 0) companyDAO.insert(company)
+                val companyIdApi = company.idApi ?: continue
+                var companyId: Long
+                companyId = if(companyDAO.checkCompanyExist(companyIdApi) == 0)
+                {
+                    companyDAO.insert(company)
+                }
+                else
+                {
+                    companyDAO.getIdCompany(companyIdApi)
+                }
+
                 val link = Link(idCompany = companyId, idResearch = searchId)
                 linkDAO.insert(link)
             }
@@ -83,17 +104,20 @@ class MainActivity : AppCompatActivity()
         companyDAO = db.companyeDAO()
         linkDAO = db.linkDAO()
 
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarSearchCompany)
-        val textNoResult = findViewById<TextView>(R.id.textNoResult)
-        val buttonSearchCompany = findViewById<ImageButton>(R.id.buttonSearchCompany)
-        val editSearchCompany = findViewById<EditText>(R.id.editSearchCompany)
-        val listCompanySearch = findViewById<ListView>(R.id.listCompanySearch)
+        progressBar = findViewById(R.id.progressBarSearchCompany)
+        textNoResult = findViewById(R.id.textNoResult)
+        buttonSearchCompany = findViewById(R.id.buttonSearchCompany)
+        editSearchCompany = findViewById(R.id.editSearchCompany)
+        listCompanySearch = findViewById(R.id.listCompanySearch)
+        buttonReconnection = findViewById(R.id.buttonReconnection)
 
+        checkInternetConnection()
         checkMemoryResearch()
 
         val svc = SirenService()
 
         buttonSearchCompany.setOnClickListener {
+            if(!checkInternetConnection()) return@setOnClickListener
             val textQuery = editSearchCompany.text.toString()
             val query = String.format(SirenService.queryUrlCompany, textQuery)
             val researchId = researchDAO.checkRequestExist(query)
@@ -125,6 +149,62 @@ class MainActivity : AppCompatActivity()
             val company = listCompanySearch.getItemAtPosition(i) as Company
             intent.putExtra("company", company)
             startActivity(intent)
+        }
+
+        buttonReconnection.setOnClickListener {
+            checkInternetConnection()
+        }
+    }
+
+    private fun checkInternetConnection(): Boolean
+    {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        if (networkInfo != null)
+        {
+            val networkState = networkInfo.state
+            if (networkState.compareTo(NetworkInfo.State.CONNECTED) != 0)
+            {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.connection)
+                    .setMessage(R.string.no_connection)
+                    .setPositiveButton(R.string.retry) { dialogInterface: DialogInterface, i: Int ->
+                        checkInternetConnection()
+                    }
+                    .setNegativeButton(R.string.close, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
+
+                buttonReconnection.visibility = View.VISIBLE
+                editSearchCompany.isEnabled = false
+                buttonSearchCompany.isEnabled = false
+                return false
+            }
+            else
+            {
+                buttonReconnection.visibility = View.INVISIBLE
+                editSearchCompany.isEnabled = true
+                buttonSearchCompany.isEnabled = true
+                return true
+            }
+        }
+        else
+        {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.connection)
+                .setMessage(R.string.no_connection)
+                .setPositiveButton(R.string.retry) { dialogInterface: DialogInterface, i: Int ->
+                    checkInternetConnection()
+                }
+                .setNegativeButton(R.string.close, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+
+            buttonReconnection.visibility = View.VISIBLE
+            editSearchCompany.isEnabled = false
+            buttonSearchCompany.isEnabled = false
+            return false
         }
     }
 

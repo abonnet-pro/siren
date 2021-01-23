@@ -2,6 +2,7 @@ package exam.abonnet.sirene.model
 
 import android.graphics.BitmapFactory
 import android.util.JsonReader
+import android.util.JsonToken
 import exam.abonnet.sirene.model.data.Company
 import java.io.IOException
 import java.net.URL
@@ -47,16 +48,16 @@ class SirenService
                         {
                             when(reader.nextName())
                             {
-                                "id" -> company.id = reader.nextInt().toLong()
-                                "siren" -> company.sirenNumber = reader.nextString()
-                                "siret" -> company.siretNumber = reader.nextString()
-                                "nom_raison_sociale" -> company.companyName = reader.nextString()
-                                "departement" -> company.department = reader.nextString()
-                                "libelle_activite_principale_entreprise" -> company.activity = reader.nextString()
-                                "geo_adresse" -> company.adress = reader.nextString()
-                                "code_postal" -> company.postalCode = reader.nextString()
-                                "date_debut_activite" -> company.dateStartActivity = reader.nextString()
-                                "libelle_nature_juridique_entreprise" -> company.status = reader.nextString()
+                                "id" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.idApi = reader.nextInt().toLong()
+                                "siren" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.sirenNumber = reader.nextString()
+                                "siret" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.siretNumber = reader.nextString()
+                                "nom_raison_sociale" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.companyName = reader.nextString()
+                                "departement" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.department = reader.nextString()
+                                "libelle_activite_principale_entreprise" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.activity = reader.nextString()
+                                "geo_adresse" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.adress = reader.nextString()
+                                "code_postal" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.postalCode = reader.nextString()
+                                "date_debut_activite" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.dateStartActivity = reader.nextString()
+                                "libelle_nature_juridique_entreprise" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.status = reader.nextString()
                                 else -> reader.skipValue()
                             }
                         }

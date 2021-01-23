@@ -65,4 +65,12 @@
         android:textStyle="bold|italic"
         android:visibility="invisible" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonReconnection"
+        android:text="@string/button_reconnection"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

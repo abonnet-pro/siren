@@ -10,4 +10,9 @@
     <string name="company_siret_detail">SIRET : %s</string>
     <string name="company_date_creation_detail">Date de début d\'activité : %s</string>
     <string name="company_juridical_detail">Statut : %s</string>
+    <string name="button_reconnection">Reconnexion</string>
+    <string name="connection">Connexion</string>
+    <string name="no_connection">Aucune connexion internet trouvée. Verifié votre connexion ou essayé à nouveau</string>
+    <string name="retry">Réessayé</string>
+    <string name="close">Fermer</string>
 </resources>
