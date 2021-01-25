@@ -15,4 +15,6 @@
     <string name="no_connection">Aucune connexion internet trouvée. Verifié votre connexion ou essayé à nouveau</string>
     <string name="retry">Réessayé</string>
     <string name="close">Fermer</string>
+    <string name="department">Departement : </string>
+    <string name="postal">Code postal :</string>
 </resources>

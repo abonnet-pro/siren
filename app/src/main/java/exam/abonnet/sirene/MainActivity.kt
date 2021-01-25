@@ -8,6 +8,8 @@ import android.net.NetworkInfo
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -29,25 +31,23 @@ class MainActivity : AppCompatActivity()
     private lateinit var progressBar: ProgressBar
     private lateinit var textNoResult: TextView
     private lateinit var buttonSearchCompany: ImageButton
-    private lateinit var editSearchCompany: EditText
+    private lateinit var editSearchCompany: AutoCompleteTextView
     private lateinit var listCompanySearch: ListView
     private lateinit var buttonReconnection: Button
+    private lateinit var editPostal: EditText
+    private lateinit var editDepartment: EditText
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                   private val listCompanySearch: ListView,
                                   private val progressBar: ProgressBar,
                                   private val textNoResult: TextView,
-                                 private val textQuery: String
+                                 private val research: Research
     ): AsyncTask<String, Void, List<Company>>()
     {
         override fun doInBackground(vararg params: String?): List<Company>?
         {
             val query = params[0] ?: return emptyList()
-
-            val dateRequest = SirenDatabase.sdf.format(Date())
-            val research = Research(request = query, dateRequest = dateRequest, textQuery = textQuery)
             val searchId = researchDAO.insert(research)
-
             val listCompany = svc.getCompany(query)
 
             for(company in listCompany)
@@ -110,6 +110,8 @@ class MainActivity : AppCompatActivity()
         editSearchCompany = findViewById(R.id.editSearchCompany)
         listCompanySearch = findViewById(R.id.listCompanySearch)
         buttonReconnection = findViewById(R.id.buttonReconnection)
+        editDepartment = findViewById(R.id.editDepartment)
+        editPostal = findViewById(R.id.editPostal)
 
         checkInternetConnection()
         checkMemoryResearch()
@@ -119,7 +121,10 @@ class MainActivity : AppCompatActivity()
         buttonSearchCompany.setOnClickListener {
             if(!checkInternetConnection()) return@setOnClickListener
             val textQuery = editSearchCompany.text.toString()
-            val query = String.format(SirenService.queryUrlCompany, textQuery)
+            val postalQuery = editPostal.text.toString()
+            val departmentQuery = editDepartment.text.toString()
+
+            val query = String.format(SirenService.queryUrl, textQuery, postalQuery, departmentQuery)
             val researchId = researchDAO.checkRequestExist(query)
             if(researchId != null)
             {
@@ -140,7 +145,10 @@ class MainActivity : AppCompatActivity()
             }
             else
             {
-                QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, textQuery).execute(query)
+                val dateRequest = SirenDatabase.sdf.format(Date())
+                val research = Research(request = query, dateRequest = dateRequest, textQuery = textQuery, postCode = postalQuery, department = departmentQuery)
+
+                QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, research).execute(query)
             }
         }
 
@@ -154,6 +162,49 @@ class MainActivity : AppCompatActivity()
         buttonReconnection.setOnClickListener {
             checkInternetConnection()
         }
+
+        editSearchCompany.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?)
+            {
+                val query = editSearchCompany.text.toString()
+
+                //editSearchCompany.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, ))
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        editPostal.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?)
+            {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                editDepartment.text.clear()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        editDepartment.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?)
+            {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                editPostal.text.clear()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
     }
 
     private fun checkInternetConnection(): Boolean

@@ -19,7 +19,7 @@ interface ResearchDAO
     @Query("SELECT id FROM Research WHERE request = :request AND archive = 0")
     fun checkRequestExist(request: String): Long?
 
-    @Query("select Company.* from company inner join link on Company.id = Link.idCompany inner join Research on Research.id = Link.idResearch where Research.id = :researchId")
+    @Query("SELECT Company.* FROM company INNER JOIN link ON Company.id = Link.idCompany INNER JOIN Research ON Research.id = Link.idResearch WHERE Research.id = :researchId")
     fun getCompanyByResearch(researchId: Long): List<Company>
 
     @Query("SELECT * FROM Research WHERE archive = 0")

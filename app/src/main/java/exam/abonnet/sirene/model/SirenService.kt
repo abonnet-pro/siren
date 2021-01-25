@@ -13,8 +13,11 @@ class SirenService
 {
     companion object
     {
-        val apiUrl = "https://entreprise.data.gouv.fr/api/sirene/v1/full_text"
-        val queryUrlCompany = "$apiUrl/%s"
+        val apiUrlText = "https://entreprise.data.gouv.fr/api/sirene/v1/full_text"
+        val queryUrlCompany = "$apiUrlText/%s?per_page=100"
+        val queryUrlCompanyPostal = "$apiUrlText/%s?per_page=100&code_postal=%s"
+        val queryUrlCompanyDepartment = "$apiUrlText/%s?per_page=100&departement=%s"
+        val queryUrl = "$apiUrlText/%s?per_page=100&code_postal=%s&departement=%s"
     }
 
     fun getCompany(query: String): List<Company>

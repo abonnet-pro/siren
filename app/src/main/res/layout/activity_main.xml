@@ -17,7 +17,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
@@ -36,17 +36,53 @@
         android:src="@android:drawable/ic_menu_search"
         android:layout_alignParentEnd="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/department"
+        android:layout_below="@id/editSearchCompany"
+        android:text="@string/department"/>
+
+    <EditText
+        android:id="@+id/editDepartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editSearchCompany"
+        android:layout_toEndOf="@id/department"
+        android:layout_alignBaseline="@id/department"
+        android:layout_marginEnd="@dimen/margin_end"
+        android:maxLength="2"
+        android:inputType="number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/postal"
+        android:text="@string/postal"
+        android:layout_below="@id/editSearchCompany"
+        android:layout_toEndOf="@id/editDepartment"/>
+
+    <EditText
+        android:id="@+id/editPostal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editSearchCompany"
+        android:layout_alignBaseline="@id/postal"
+        android:layout_toEndOf="@id/postal"
+        android:inputType="number"
+        android:maxLength="5" />
+
     <ListView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/listCompanySearch"
-        android:layout_below="@id/editSearchCompany"/>
+        android:layout_below="@id/editDepartment"/>
 
     <ProgressBar
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/progressBarSearchCompany"
-        android:layout_below="@id/editSearchCompany"
+        android:layout_below="@id/editPostal"
         android:visibility="invisible"
         android:layout_centerInParent="true"/>
 
@@ -54,7 +90,7 @@
         android:id="@+id/textNoResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editSearchCompany"
+        android:layout_below="@id/editPostal"
         android:layout_centerInParent="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"

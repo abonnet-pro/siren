@@ -9,8 +9,8 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
                     var dateRequest: String = "",
                     var textQuery: String ="",
                     var archive:Boolean = false,
-                    var department:Int? = null,
-                    var postCode:Int? = null)
+                    var department:String = "",
+                    var postCode:String = "")
 
 {
     override fun equals(other: Any?): Boolean {
