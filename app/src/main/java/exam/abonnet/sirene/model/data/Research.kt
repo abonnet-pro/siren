@@ -2,6 +2,7 @@ package exam.abonnet.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
@@ -10,7 +11,7 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
                     var textQuery: String ="",
                     var archive:Boolean = false,
                     var department:String = "",
-                    var postCode:String = "")
+                    var postCode:String = ""): Serializable
 
 {
     override fun equals(other: Any?): Boolean {
@@ -29,6 +30,11 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
     }
 
     override fun toString(): String {
-        return "Research(request='$request', dateRequest='$dateRequest')"
+        return if(department == "" && postCode == "")
+            "$dateRequest $textQuery"
+        else if(department == "")
+            "$dateRequest $textQuery ($postCode)"
+        else
+            "$dateRequest $textQuery ($department)"
     }
 }

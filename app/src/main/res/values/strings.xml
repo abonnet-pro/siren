@@ -3,6 +3,7 @@
     <string name="text_recherche">Rechercher une entreprise</string>
     <string name="no_result_found">No results found</string>
     <string name="detail_company_activity">Entreprise</string>
+    <string name="history_research_activity">Historique</string>
     <string name="company_name_detail">Entreprise : %s</string>
     <string name="company_activity_detail">Activité principale : %s</string>
     <string name="company_adress_detail">Adresse : %s</string>
@@ -17,4 +18,7 @@
     <string name="close">Fermer</string>
     <string name="department">Departement : </string>
     <string name="postal">Code postal :</string>
+    <string name="history">Historique</string>
+    <string name="recent">Aujourd\'hui</string>
+    <string name="previous">Recherches précédentes</string>
 </resources>

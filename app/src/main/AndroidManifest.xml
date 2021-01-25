@@ -13,9 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".HistoryActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/history_research_activity">
+
+        </activity>
+        <activity
             android:name=".DetailCompanyActivity"
             android:label="@string/detail_company_activity"
-            android:parentActivityName="exam.abonnet.sirene.MainActivity">
+            android:parentActivityName=".MainActivity">
 
         </activity>
         <activity android:name=".MainActivity">

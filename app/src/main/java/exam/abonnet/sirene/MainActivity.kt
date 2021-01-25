@@ -1,5 +1,7 @@
 package exam.abonnet.sirene
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -31,11 +35,14 @@ class MainActivity : AppCompatActivity()
     private lateinit var progressBar: ProgressBar
     private lateinit var textNoResult: TextView
     private lateinit var buttonSearchCompany: ImageButton
-    private lateinit var editSearchCompany: AutoCompleteTextView
+    private lateinit var editSearchCompany: EditText
     private lateinit var listCompanySearch: ListView
     private lateinit var buttonReconnection: Button
     private lateinit var editPostal: EditText
     private lateinit var editDepartment: EditText
+    private lateinit var svc: SirenService
+
+    private val LAUNCH_HISTORY_ACTIVITY = 1
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                   private val listCompanySearch: ListView,
@@ -94,6 +101,44 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_HISTORY_ACTIVITY)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                val research = data?.getSerializableExtra("research") as Research
+                val researchId = research.id ?: return
+                editSearchCompany.setText(research.textQuery)
+                editDepartment.text.clear()
+                editPostal.text.clear()
+                if(!research.department.isEmpty()) editDepartment.setText(research.department)
+                if(!research.postCode.isEmpty()) editPostal.setText(research.postCode)
+
+                val listCompany = researchDAO.getCompanyByResearch(researchId)
+
+                listCompanySearch.adapter = ArrayAdapter<Company>(
+                    applicationContext,
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1,
+                    listCompany
+                )
+                listCompanySearch.visibility = View.VISIBLE
+                textNoResult.visibility = View.INVISIBLE
+
+                if (listCompany.isEmpty())
+                {
+                    textNoResult.visibility = View.VISIBLE
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED)
+            {
+            }
+        }
+}
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -103,6 +148,7 @@ class MainActivity : AppCompatActivity()
         researchDAO = db.researchDAO()
         companyDAO = db.companyeDAO()
         linkDAO = db.linkDAO()
+        svc = SirenService()
 
         progressBar = findViewById(R.id.progressBarSearchCompany)
         textNoResult = findViewById(R.id.textNoResult)
@@ -116,40 +162,9 @@ class MainActivity : AppCompatActivity()
         checkInternetConnection()
         checkMemoryResearch()
 
-        val svc = SirenService()
-
         buttonSearchCompany.setOnClickListener {
             if(!checkInternetConnection()) return@setOnClickListener
-            val textQuery = editSearchCompany.text.toString()
-            val postalQuery = editPostal.text.toString()
-            val departmentQuery = editDepartment.text.toString()
-
-            val query = String.format(SirenService.queryUrl, textQuery, postalQuery, departmentQuery)
-            val researchId = researchDAO.checkRequestExist(query)
-            if(researchId != null)
-            {
-                val listCompany = researchDAO.getCompanyByResearch(researchId)
-
-                listCompanySearch.adapter = ArrayAdapter<Company>(applicationContext,
-                    android.R.layout.simple_list_item_1,
-                    android.R.id.text1,
-                    listCompany
-                )
-                listCompanySearch.visibility = View.VISIBLE
-                textNoResult.visibility = View.INVISIBLE
-
-                if(listCompany.isEmpty())
-                {
-                    textNoResult.visibility = View.VISIBLE
-                }
-            }
-            else
-            {
-                val dateRequest = SirenDatabase.sdf.format(Date())
-                val research = Research(request = query, dateRequest = dateRequest, textQuery = textQuery, postCode = postalQuery, department = departmentQuery)
-
-                QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, research).execute(query)
-            }
+            launchResearch()
         }
 
         listCompanySearch.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
@@ -162,21 +177,6 @@ class MainActivity : AppCompatActivity()
         buttonReconnection.setOnClickListener {
             checkInternetConnection()
         }
-
-        editSearchCompany.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?)
-            {
-                val query = editSearchCompany.text.toString()
-
-                //editSearchCompany.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, ))
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
 
         editPostal.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?)
@@ -205,6 +205,54 @@ class MainActivity : AppCompatActivity()
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+    }
+
+    private fun launchResearch() {
+        val textQuery = editSearchCompany.text.toString()
+        val postalQuery = editPostal.text.toString()
+        val departmentQuery = editDepartment.text.toString()
+
+        if (textQuery.isEmpty()) {
+            listCompanySearch.adapter = null
+            textNoResult.visibility = View.VISIBLE
+            return
+        } else {
+            textNoResult.visibility = View.INVISIBLE
+        }
+
+        val query = String.format(SirenService.queryUrl, textQuery, postalQuery, departmentQuery)
+        val researchId = researchDAO.checkRequestExist(query)
+        if (researchId != null)
+        {
+            val listCompany = researchDAO.getCompanyByResearch(researchId)
+
+            listCompanySearch.adapter = ArrayAdapter<Company>(
+                applicationContext,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                listCompany
+            )
+            listCompanySearch.visibility = View.VISIBLE
+            textNoResult.visibility = View.INVISIBLE
+
+            if (listCompany.isEmpty())
+            {
+                textNoResult.visibility = View.VISIBLE
+            }
+        } else {
+            val dateRequest = SirenDatabase.sdf.format(Date())
+            val research = Research(
+                request = query,
+                dateRequest = dateRequest,
+                textQuery = textQuery,
+                postCode = postalQuery,
+                department = departmentQuery
+            )
+
+            QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, research).execute(
+                query
+            )
+        }
     }
 
     private fun checkInternetConnection(): Boolean
@@ -275,6 +323,26 @@ class MainActivity : AppCompatActivity()
                     companyDAO.update(it)
                 }
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean
+    {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        return when (item.itemId)
+        {
+            R.id.action_history ->
+            {
+                intent = Intent(this@MainActivity, HistoryActivity::class.java)
+                startActivityForResult(intent, LAUNCH_HISTORY_ACTIVITY)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
