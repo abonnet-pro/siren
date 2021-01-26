@@ -22,6 +22,7 @@ abstract class SirenDatabase : RoomDatabase()
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH)
         var INSTANCE: SirenDatabase? = null
 
+
         fun getDatabase(context: Context): SirenDatabase
         {
             if (INSTANCE == null)

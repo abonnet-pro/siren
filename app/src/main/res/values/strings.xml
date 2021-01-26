@@ -2,7 +2,7 @@
     <string name="app_name">Sirene</string>
     <string name="text_recherche">Rechercher une entreprise</string>
     <string name="no_result_found">Aucun résultat trouvé</string>
-    <string name="detail_company_activity">Entreprise</string>
+    <string name="detail_company_activity">Fiche Entreprise</string>
     <string name="history_research_activity">Historique</string>
     <string name="company_name_detail">%s</string>
     <string name="company_name_label">Entreprise</string>

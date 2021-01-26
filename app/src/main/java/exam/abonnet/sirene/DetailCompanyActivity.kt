@@ -27,7 +27,7 @@ class DetailCompanyActivity : AppCompatActivity()
         company_activity_detail.text = String.format(getString(R.string.company_activity_detail), company.activity)
         company_date_creation_detail.text = String.format(getString(R.string.company_date_creation_detail), company.dateStartActivity)
         company_juridical_detail.text = String.format(getString(R.string.company_juridical_detail), company.status)
-        company_siren_detail.text = String.format(getString(R.string.company_siren_detail), company.siretNumber)
+        company_siren_detail.text = String.format(getString(R.string.company_siren_detail), company.sirenNumber)
         company_siret_detail.text = String.format(getString(R.string.company_siret_detail), company.siretNumber)
     }
 }

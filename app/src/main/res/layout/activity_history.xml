@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/background"
         android:orientation="vertical">
 
         <LinearLayout
@@ -15,15 +14,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_end_button"
-                android:text="@string/recent"/>
+                android:padding="10dp"
+                android:text="@string/recent"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageButton
+                android:id="@+id/buttonRecent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonRecent"
                 android:layout_gravity="center"
-                android:background="@android:drawable/arrow_down_float"/>
+                android:background="@android:drawable/arrow_down_float"
+                android:backgroundTint="#3F51B5" />
 
         </LinearLayout>
 
@@ -40,15 +43,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_end_button"
-                android:text="@string/previous"/>
+                android:padding="10dp"
+                android:text="@string/previous"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageButton
+                android:id="@+id/buttonPrevious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonPrevious"
                 android:layout_gravity="center"
-                android:background="@android:drawable/arrow_down_float"/>
+                android:background="@android:drawable/arrow_down_float"
+                android:backgroundTint="#3F51B5" />
 
         </LinearLayout>
 

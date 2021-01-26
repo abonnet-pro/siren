@@ -19,17 +19,20 @@
         android:layout_alignParentTop="true"/>
 
     <EditText
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="5dp"
         android:id="@+id/editSearchCompany"
-        tools:ignore="LabelFor"
-        android:inputType="text"
-        android:autofillHints=""
-        android:hint="@string/company"
-        android:background="@drawable/custom_research"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelQuery"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="5dp"
         android:layout_toStartOf="@id/buttonSearchCompany"
-        android:layout_below="@id/labelQuery"/>
+        android:autofillHints=""
+        android:background="@drawable/custom_research"
+        android:hint="@string/company"
+        android:inputType="text"
+        tools:ignore="LabelFor" />
 
     <ImageButton
         android:layout_height="wrap_content"
@@ -100,6 +103,7 @@
         android:layout_width="wrap_content"
         android:id="@+id/progressBarSearchCompany"
         android:visibility="invisible"
+        android:layout_below="@id/textNoResult"
         android:layout_centerInParent="true"/>
 
     <TextView

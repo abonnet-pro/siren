@@ -10,35 +10,48 @@
         android:id="@+id/label_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_name_label" />
+        android:text="@string/company_name_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_name_detail"
-        android:layout_height="wrap_content"
         android:layout_width="0dip"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_name_detail" />
+        android:text="@string/company_name_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_adress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_adress_label" />
+        android:text="@string/company_adress_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_adress_detail"
         android:layout_width="0dip"
-        android:layout_gravity="fill_horizontal"
         android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_adress_detail" />
+        android:text="@string/company_adress_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_siret"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_siret_label" />
+        android:text="@string/company_siret_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_siret_detail"
@@ -46,41 +59,56 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_siret_detail" />
+        android:text="@string/company_siret_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_siren"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_siren_label" />
+        android:text="@string/company_siren_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_siren_detail"
         android:layout_width="0dip"
-        android:layout_gravity="fill_horizontal"
         android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_siren_detail" />
+        android:text="@string/company_siren_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_activity_label" />
+        android:text="@string/company_activity_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_activity_detail"
         android:layout_width="0dip"
-        android:layout_gravity="fill_horizontal"
         android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_activity_detail" />
+        android:text="@string/company_activity_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_start_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_start_label" />
+        android:text="@string/company_start_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_date_creation_detail"
@@ -88,20 +116,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_date_creation_detail" />
+        android:text="@string/company_date_creation_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/label_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/company_juridical_label" />
+        android:text="@string/company_juridical_label"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/company_juridical_detail"
         android:layout_width="0dip"
-        android:layout_gravity="fill_horizontal"
         android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
         android:padding="10dp"
-        android:text="@string/company_juridical_detail" />
-
+        android:text="@string/company_juridical_detail"
+        android:textColor="#FF5722"
+        android:textStyle="bold" />
 </GridLayout>
