@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:columnCount="2"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_name_label" />
+
+    <TextView
+        android:id="@+id/company_name_detail"
+        android:layout_height="wrap_content"
+        android:layout_width="0dip"
+        android:layout_gravity="fill_horizontal"
+        android:padding="10dp"
+        android:text="@string/company_name_detail" />
+
+    <TextView
+        android:id="@+id/label_adress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_adress_label" />
+
+    <TextView
+        android:id="@+id/company_adress_detail"
+        android:layout_width="0dip"
+        android:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/company_adress_detail" />
+
+    <TextView
+        android:id="@+id/label_siret"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_siret_label" />
+
+    <TextView
+        android:id="@+id/company_siret_detail"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:padding="10dp"
+        android:text="@string/company_siret_detail" />
+
+    <TextView
+        android:id="@+id/label_siren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_siren_label" />
+
+    <TextView
+        android:id="@+id/company_siren_detail"
+        android:layout_width="0dip"
+        android:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/company_siren_detail" />
+
+    <TextView
+        android:id="@+id/label_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_activity_label" />
+
+    <TextView
+        android:id="@+id/company_activity_detail"
+        android:layout_width="0dip"
+        android:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/company_activity_detail" />
+
+    <TextView
+        android:id="@+id/label_start_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_start_label" />
+
+    <TextView
+        android:id="@+id/company_date_creation_detail"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:padding="10dp"
+        android:text="@string/company_date_creation_detail" />
+
+    <TextView
+        android:id="@+id/label_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_juridical_label" />
+
+    <TextView
+        android:id="@+id/company_juridical_detail"
+        android:layout_width="0dip"
+        android:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/company_juridical_detail" />
+
+</GridLayout>

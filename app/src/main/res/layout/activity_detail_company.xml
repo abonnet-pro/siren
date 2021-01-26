@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,43 +11,105 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/label_name"
+        android:layout_alignParentStart="true"
+        android:text="@string/company_name_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/company_name_detail"
+        android:layout_toEndOf="@id/label_name"
         android:text="@string/company_name_detail"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/label_adress"
+        android:layout_below="@id/label_name"
+        android:text="@string/company_adress_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/company_adress_detail"
+        android:layout_toEndOf="@id/label_adress"
+        android:layout_below="@id/label_name"
         android:text="@string/company_adress_detail"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/company_activity_detail"
-        android:text="@string/company_activity_detail"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/company_date_creation_detail"
-        android:text="@string/company_date_creation_detail"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/company_juridical_detail"
-        android:text="@string/company_juridical_detail"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/company_siren_detail"
-        android:text="@string/company_siren_detail"/>
+        android:id="@+id/label_siret"
+        android:layout_below="@id/label_adress"
+        android:text="@string/company_siret_label"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/company_siret_detail"
+        android:layout_toEndOf="@id/label_siret"
+        android:layout_below="@id/label_adress"
         android:text="@string/company_siret_detail"/>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_siren"
+        android:layout_below="@id/label_siret"
+        android:text="@string/company_siren_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/company_siren_detail"
+        android:layout_toEndOf="@id/label_siren"
+        android:layout_below="@id/label_siret"
+        android:text="@string/company_siren_detail"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_activity"
+        android:layout_below="@id/label_siren"
+        android:text="@string/company_activity_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/company_activity_detail"
+        android:layout_toEndOf="@id/label_activity"
+        android:layout_below="@id/label_siren"
+        android:text="@string/company_activity_detail"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_start_activity"
+        android:layout_below="@id/label_activity"
+        android:text="@string/company_start_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/company_date_creation_detail"
+        android:layout_toEndOf="@id/label_start_activity"
+        android:layout_below="@id/label_activity"
+        android:text="@string/company_date_creation_detail"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_status"
+        android:layout_below="@id/label_start_activity"
+        android:text="@string/company_juridical_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/company_juridical_detail"
+        android:layout_toEndOf="@id/label_status"
+        android:layout_below="@id/label_start_activity"
+        android:text="@string/company_juridical_detail"/>
+
+</RelativeLayout>

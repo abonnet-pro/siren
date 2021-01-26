@@ -77,7 +77,7 @@ class HistoryActivity : AppCompatActivity()
             else listPrevious.adapter = ArrayAdapter<Research>(applicationContext,
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
-                listRecentResearch)
+                listPreviousResearch)
         }
     }
 }

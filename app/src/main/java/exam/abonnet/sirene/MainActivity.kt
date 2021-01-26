@@ -1,6 +1,5 @@
 package exam.abonnet.sirene
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
@@ -21,10 +20,9 @@ import exam.abonnet.sirene.model.*
 import exam.abonnet.sirene.model.data.Company
 import exam.abonnet.sirene.model.data.Link
 import exam.abonnet.sirene.model.data.Research
-import java.net.URL
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.properties.Delegates
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity()
 {
@@ -43,6 +41,10 @@ class MainActivity : AppCompatActivity()
     private lateinit var svc: SirenService
 
     private val LAUNCH_HISTORY_ACTIVITY = 1
+    private val MY_DATA_KEYS_FORM = "myDataForm"
+    private val MY_DATA_KEYS_LIST = "myDataList"
+    private var myDataForm: HashMap<String, String>? = null
+    private var myDataList: ArrayList<Company>? = null
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                   private val listCompanySearch: ListView,
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity()
             val query = params[0] ?: return emptyList()
             val searchId = researchDAO.insert(research)
             val listCompany = svc.getCompany(query)
+            if(!listCompany.isNullOrEmpty()) myDataList = listCompany as ArrayList<Company>
 
             for(company in listCompany)
             {
@@ -118,6 +121,7 @@ class MainActivity : AppCompatActivity()
                 if(!research.postCode.isEmpty()) editPostal.setText(research.postCode)
 
                 val listCompany = researchDAO.getCompanyByResearch(researchId)
+                myDataList = listCompany as ArrayList<Company>
 
                 listCompanySearch.adapter = ArrayAdapter<Company>(
                     applicationContext,
@@ -161,6 +165,7 @@ class MainActivity : AppCompatActivity()
 
         checkInternetConnection()
         checkMemoryResearch()
+        checkBundle(savedInstanceState)
 
         buttonSearchCompany.setOnClickListener {
             if(!checkInternetConnection()) return@setOnClickListener
@@ -178,14 +183,13 @@ class MainActivity : AppCompatActivity()
             checkInternetConnection()
         }
 
-        editPostal.addTextChangedListener(object: TextWatcher {
+        editSearchCompany.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?)
             {
-
+                myDataForm?.set("companyName", editSearchCompany.text.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                editDepartment.text.clear()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -195,11 +199,34 @@ class MainActivity : AppCompatActivity()
         editDepartment.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?)
             {
-
+                myDataForm?.set("department", editDepartment.text.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                editPostal.text.clear()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        editPostal.setOnTouchListener { v, event ->
+            editDepartment.text.clear()
+            false
+        }
+
+
+        editDepartment.setOnTouchListener { v, event ->
+            editPostal.text.clear()
+            false
+        }
+
+        editPostal.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?)
+            {
+                myDataForm?.set("postal", editPostal.text.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -207,16 +234,61 @@ class MainActivity : AppCompatActivity()
         })
     }
 
+    private fun checkBundle(savedInstanceState: Bundle?)
+    {
+        if (savedInstanceState != null && savedInstanceState.containsKey(MY_DATA_KEYS_FORM) && savedInstanceState.containsKey(MY_DATA_KEYS_LIST))
+        {
+            myDataForm = savedInstanceState.getSerializable(MY_DATA_KEYS_FORM) as HashMap<String, String>
+            myDataList = savedInstanceState.getSerializable(MY_DATA_KEYS_LIST) as ArrayList<Company>
+
+            val name = myDataForm?.get("companyName")
+            val post = myDataForm?.get("postal")
+            val dep = myDataForm?.get("department")
+
+            if(name != null)
+            {
+                if(name.isNotEmpty()) editSearchCompany.setText(name)
+            }
+            if(post != null)
+            {
+                if(post.isNotEmpty()) editPostal.setText(post)
+            }
+            if(dep != null)
+            {
+                if(dep.isNotEmpty()) editDepartment.setText(dep)
+            }
+
+            if(!myDataList.isNullOrEmpty())
+            {
+                listCompanySearch.adapter = ArrayAdapter<Company>(
+                    applicationContext,
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1,
+                    myDataList!!
+                )
+            }
+        }
+        else
+        {
+            myDataForm = HashMap()
+            myDataList = ArrayList()
+        }
+    }
+
     private fun launchResearch() {
         val textQuery = editSearchCompany.text.toString()
         val postalQuery = editPostal.text.toString()
         val departmentQuery = editDepartment.text.toString()
 
-        if (textQuery.isEmpty()) {
+        if (textQuery.isEmpty())
+        {
             listCompanySearch.adapter = null
             textNoResult.visibility = View.VISIBLE
+            myDataList = ArrayList()
             return
-        } else {
+        }
+        else
+        {
             textNoResult.visibility = View.INVISIBLE
         }
 
@@ -225,6 +297,7 @@ class MainActivity : AppCompatActivity()
         if (researchId != null)
         {
             val listCompany = researchDAO.getCompanyByResearch(researchId)
+            myDataList = listCompany as ArrayList<Company>
 
             listCompanySearch.adapter = ArrayAdapter<Company>(
                 applicationContext,
@@ -344,5 +417,12 @@ class MainActivity : AppCompatActivity()
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle)
+    {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(MY_DATA_KEYS_FORM, myDataForm)
+        outState.putSerializable(MY_DATA_KEYS_LIST, myDataList)
     }
 }

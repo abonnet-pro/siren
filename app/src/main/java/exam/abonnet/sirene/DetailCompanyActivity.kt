@@ -10,7 +10,7 @@ class DetailCompanyActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_company)
+        setContentView(R.layout.activity_detail)
 
         val company = intent.getSerializableExtra("company") as Company
 
