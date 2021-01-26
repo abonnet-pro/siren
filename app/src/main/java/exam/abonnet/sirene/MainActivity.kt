@@ -351,6 +351,8 @@ class MainActivity : AppCompatActivity()
                 buttonReconnection.visibility = View.VISIBLE
                 editSearchCompany.isEnabled = false
                 buttonSearchCompany.isEnabled = false
+                editPostal.isEnabled = false
+                editDepartment.isEnabled = false
                 return false
             }
             else
@@ -358,6 +360,8 @@ class MainActivity : AppCompatActivity()
                 buttonReconnection.visibility = View.INVISIBLE
                 editSearchCompany.isEnabled = true
                 buttonSearchCompany.isEnabled = true
+                editPostal.isEnabled = true
+                editDepartment.isEnabled = true
                 return true
             }
         }
@@ -376,6 +380,8 @@ class MainActivity : AppCompatActivity()
             buttonReconnection.visibility = View.VISIBLE
             editSearchCompany.isEnabled = false
             buttonSearchCompany.isEnabled = false
+            editPostal.isEnabled = false
+            editDepartment.isEnabled = false
             return false
         }
     }
@@ -413,6 +419,18 @@ class MainActivity : AppCompatActivity()
             {
                 intent = Intent(this@MainActivity, HistoryActivity::class.java)
                 startActivityForResult(intent, LAUNCH_HISTORY_ACTIVITY)
+                true
+            }
+            R.id.action_delete ->
+            {
+                editSearchCompany.text.clear()
+                myDataForm?.set("companyName", "")
+                editDepartment.text.clear()
+                myDataForm?.set("department", "")
+                editPostal.text.clear()
+                myDataForm?.set("postal", "")
+                listCompanySearch.adapter = null
+                myDataList = ArrayList()
                 true
             }
             else -> super.onOptionsItemSelected(item)

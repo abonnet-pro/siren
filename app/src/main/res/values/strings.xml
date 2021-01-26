@@ -21,7 +21,7 @@
     <string name="button_reconnection">Reconnexion</string>
     <string name="connection">Connexion</string>
     <string name="no_connection">Aucune connexion internet trouvée. Verifié votre connexion ou essayé à nouveau</string>
-    <string name="retry">Réessayé</string>
+    <string name="retry">Réessayer</string>
     <string name="close">Fermer</string>
     <string name="department">Departement : </string>
     <string name="department_hint">Dep.</string>
@@ -31,4 +31,6 @@
     <string name="recent">Aujourd\'hui</string>
     <string name="previous">Recherches précédentes</string>
     <string name="company">Entreprise</string>
+    <string name="request_history">Recherche : </string>
+    <string name="title_delete">Supprimer la sélection</string>
 </resources>

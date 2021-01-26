@@ -5,10 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageButton
-import android.widget.ListView
+import android.widget.*
 import exam.abonnet.sirene.model.CompanyDAO
 import exam.abonnet.sirene.model.LinkDAO
 import exam.abonnet.sirene.model.ResearchDAO
@@ -22,6 +19,8 @@ class HistoryActivity : AppCompatActivity()
     private lateinit var linkDAO: LinkDAO
     private lateinit var listRecent: ListView
     private lateinit var listPrevious: ListView
+    private lateinit var buttonRecent: ImageButton
+    private lateinit var buttonPrevious: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -35,12 +34,11 @@ class HistoryActivity : AppCompatActivity()
 
         listRecent = findViewById(R.id.listRecent)
         listPrevious = findViewById(R.id.listPrevious)
+        buttonRecent = findViewById(R.id.buttonRecent)
+        buttonPrevious = findViewById(R.id.buttonPrevious)
 
         val listRecentResearch = researchDAO.getAllResearchActive()
-        listRecent.adapter = ArrayAdapter<Research>(applicationContext,
-            android.R.layout.simple_list_item_1,
-            android.R.id.text1,
-            listRecentResearch)
+        listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
 
         listRecent.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
             val research = listRecent.getItemAtPosition(i) as Research
@@ -51,10 +49,7 @@ class HistoryActivity : AppCompatActivity()
         }
 
         val listPreviousResearch = researchDAO.getAllPreviousResearch()
-        listPrevious.adapter = ArrayAdapter<Research>(applicationContext,
-            android.R.layout.simple_list_item_1,
-            android.R.id.text1,
-            listPreviousResearch)
+        listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousResearch)
 
         listPrevious.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
             val research = listPrevious.getItemAtPosition(i) as Research
@@ -65,19 +60,55 @@ class HistoryActivity : AppCompatActivity()
         }
 
         findViewById<ImageButton>(R.id.buttonRecent).setOnClickListener {
-            if(listRecent.adapter != null) listRecent.adapter = null
-            else listRecent.adapter = ArrayAdapter<Research>(applicationContext,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                listRecentResearch)
+            if(listRecent.adapter != null)
+            {
+                listRecent.adapter = null
+                buttonRecent.background = getDrawable(android.R.drawable.arrow_up_float)
+            }
+            else
+            {
+                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
+                buttonRecent.background = getDrawable(android.R.drawable.arrow_down_float)
+            }
+        }
+
+        findViewById<TextView>(R.id.label_recent).setOnClickListener {
+            if(listRecent.adapter != null)
+            {
+                listRecent.adapter = null
+                buttonRecent.background = getDrawable(android.R.drawable.arrow_up_float)
+            }
+            else
+            {
+                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
+                buttonRecent.background = getDrawable(android.R.drawable.arrow_down_float)
+            }
         }
 
         findViewById<ImageButton>(R.id.buttonPrevious).setOnClickListener {
-            if(listPrevious.adapter != null) listPrevious.adapter = null
-            else listPrevious.adapter = ArrayAdapter<Research>(applicationContext,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                listPreviousResearch)
+            if(listPrevious.adapter != null)
+            {
+                listPrevious.adapter = null
+                buttonPrevious.background = getDrawable(android.R.drawable.arrow_up_float)
+            }
+            else
+            {
+                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousResearch)
+                buttonPrevious.background = getDrawable(android.R.drawable.arrow_down_float)
+            }
+        }
+
+        findViewById<TextView>(R.id.label_previous).setOnClickListener {
+            if(listPrevious.adapter != null)
+            {
+                listPrevious.adapter = null
+                buttonPrevious.background = getDrawable(android.R.drawable.arrow_up_float)
+            }
+            else
+            {
+                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousResearch)
+                buttonPrevious.background = getDrawable(android.R.drawable.arrow_down_float)
+            }
         }
     }
 }

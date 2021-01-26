@@ -2,6 +2,7 @@ package exam.abonnet.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import exam.abonnet.sirene.R
 import java.io.Serializable
 
 @Entity
