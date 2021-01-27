@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var editNaf: AutoCompleteTextView
     private lateinit var editActivity: AutoCompleteTextView
     private lateinit var svc: SirenService
+    private lateinit var prefs: SharedPreferences
 
     private val LAUNCH_HISTORY_ACTIVITY = 1
     private val MY_DATA_KEYS_FORM = "myDataForm"
@@ -218,11 +220,13 @@ class MainActivity : AppCompatActivity()
         companyDAO = db.companyeDAO()
         linkDAO = db.linkDAO()
         svc = SirenService()
+        prefs = getPreferences(MODE_PRIVATE)
 
         initializationView()
         initializationListener()
         checkInternetConnection()
         checkMemoryResearch()
+        checkPreferences()
         checkBundle(savedInstanceState)
     }
 
@@ -245,6 +249,7 @@ class MainActivity : AppCompatActivity()
         buttonSearchCompany.setOnClickListener {
             if (!checkInternetConnection()) return@setOnClickListener
             if(!checkEntries()) return@setOnClickListener
+            savePreferences()
             launchResearch()
         }
 
@@ -409,6 +414,32 @@ class MainActivity : AppCompatActivity()
         }
 
         return noError
+    }
+
+    private fun checkPreferences()
+    {
+        val companyName = prefs.getString("company_name", "")
+        val companyDepartment = prefs.getString("company_department", "")
+        val companyPostal = prefs.getString("company_postal", "")
+        val companyActivity = prefs.getString("company_activity", "")
+        val companyNAF = prefs.getString("company_naf", "")
+
+        editSearchCompany.setText(companyName)
+        editDepartment.setText(companyDepartment)
+        editPostal.setText(companyPostal)
+        editActivity.setText(companyActivity)
+        editNaf.setText(companyNAF)
+    }
+
+    private fun savePreferences()
+    {
+        val editor = prefs.edit()
+        editor.putString("company_name", editSearchCompany.text.toString())
+        editor.putString("company_department", editDepartment.text.toString())
+        editor.putString("company_postal", editPostal.text.toString())
+        editor.putString("company_activity", editActivity.text.toString())
+        editor.putString("company_naf", editNaf.text.toString())
+        editor.apply()
     }
 
     private fun checkBundle(savedInstanceState: Bundle?)

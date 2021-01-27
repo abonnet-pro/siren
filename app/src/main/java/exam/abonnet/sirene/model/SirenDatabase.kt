@@ -20,6 +20,7 @@ abstract class SirenDatabase : RoomDatabase()
     companion object
     {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH)
+        val sdfCompany = SimpleDateFormat("yyyyMMdd", Locale.FRENCH)
         var INSTANCE: SirenDatabase? = null
 
 

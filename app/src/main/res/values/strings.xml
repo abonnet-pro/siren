@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sirene</string>
+    <string name="app_name">Siren</string>
     <string name="text_recherche">Rechercher une entreprise</string>
     <string name="no_result_found">Aucun résultat trouvé</string>
     <string name="detail_company_activity">Fiche Entreprise</string>
