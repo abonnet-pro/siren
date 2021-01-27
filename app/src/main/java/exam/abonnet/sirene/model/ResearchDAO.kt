@@ -25,6 +25,9 @@ interface ResearchDAO
     @Query("SELECT * FROM Research WHERE archive = 0")
     fun getAllResearchActive(): List<Research>
 
-    @Query("SELECT * FROM research WHERE archive = 1 ORDER BY dateRequest")
+    @Query("SELECT * FROM research WHERE archive = 0 ORDER BY id DESC")
+    fun getAllRecentResearch(): List<Research>
+
+    @Query("SELECT * FROM research WHERE archive = 1 ORDER BY dateRequest ASC, id DESC")
     fun getAllPreviousResearch(): List<Research>
 }

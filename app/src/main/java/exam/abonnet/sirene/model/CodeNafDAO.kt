@@ -13,6 +13,9 @@ interface CodeNafDAO
     @Query("SELECT * FROM CodeNaf WHERE description LIKE '%' || :description || '%'")
     fun getNafByDescription(description: String): List<CodeNaf>
 
-    @Query("SELECT * FROM CodeNaf WHERE description = :description")
+    @Query("SELECT codeNAFAPE FROM CodeNaf WHERE codeNAFAPE LIKE :description || '%'")
+    fun getNafCodeByDescription(description: String): List<String>
+
+    @Query("SELECT * FROM CodeNaf WHERE codeNAFAPE = :description")
     fun getCodeNaf(description: String): CodeNaf?
 }

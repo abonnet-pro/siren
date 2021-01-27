@@ -37,7 +37,7 @@ class HistoryActivity : AppCompatActivity()
         buttonRecent = findViewById(R.id.buttonRecent)
         buttonPrevious = findViewById(R.id.buttonPrevious)
 
-        val listRecentResearch = researchDAO.getAllResearchActive()
+        val listRecentResearch = researchDAO.getAllRecentResearch()
         listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
 
         listRecent.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->

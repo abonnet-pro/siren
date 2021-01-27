@@ -28,7 +28,7 @@
         android:layout_marginBottom="5dp"
         android:layout_toStartOf="@id/buttonSearchCompany"
         android:autofillHints=""
-        android:background="@drawable/custom_research"
+        android:background="@drawable/custom_research_enabled"
         android:hint="@string/company"
         android:inputType="text"
         tools:ignore="LabelFor" />
@@ -60,7 +60,8 @@
         android:layout_alignTop="@id/department"
         android:layout_alignBottom="@id/department"
         android:layout_toEndOf="@id/department"
-        android:background="@drawable/custom_research"
+        android:background="@drawable/selector_edit"
+        android:enabled="false"
         android:hint="@string/department_hint"
         android:inputType="number"
         android:maxLength="2"
@@ -84,32 +85,10 @@
         android:layout_alignTop="@id/postal"
         android:layout_alignBottom="@id/postal"
         android:layout_toEndOf="@id/postal"
-        android:background="@drawable/custom_research"
+        android:background="@drawable/selector_edit"
+        android:enabled="false"
         android:hint="@string/postal_hint"
         android:inputType="number"
-        android:maxLength="5"
-        android:textAlignment="center" />
-
-    <TextView
-        android:id="@+id/codeNaf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/department"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/codeNaf"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/editCodeNaf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editDepartment"
-        android:layout_alignTop="@id/codeNaf"
-        android:layout_alignBottom="@id/codeNaf"
-        android:layout_toEndOf="@id/codeNaf"
-        android:background="@drawable/custom_research"
-        android:hint="@string/code_naf_hint"
         android:maxLength="5"
         android:textAlignment="center" />
 
@@ -117,8 +96,7 @@
         android:id="@+id/activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/postal"
-        android:layout_toEndOf="@id/editCodeNaf"
+        android:layout_below="@id/department"
         android:padding="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/activity"
@@ -131,11 +109,37 @@
         android:layout_below="@id/editPostal"
         android:layout_alignTop="@id/activity"
         android:layout_alignBottom="@id/activity"
+        android:layout_alignEnd="@id/editPostal"
         android:layout_toEndOf="@id/activity"
-        android:background="@drawable/custom_research"
+        android:background="@drawable/selector_edit"
+        android:maxLines="1"
+        android:inputType="text"
+        android:enabled="false"
         android:hint="@string/activity_hint" />
 
+    <TextView
+        android:id="@+id/codeNaf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/codeNaf"
+        android:textStyle="bold" />
 
+    <AutoCompleteTextView
+        android:id="@+id/editCodeNaf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editDepartment"
+        android:layout_alignTop="@id/codeNaf"
+        android:layout_alignBottom="@id/codeNaf"
+        android:layout_toEndOf="@id/codeNaf"
+        android:background="@drawable/selector_edit"
+        android:hint="@string/code_naf_hint"
+        android:maxLength="5"
+        android:enabled="false"
+        android:textAlignment="center" />
 
     <ListView
         android:id="@+id/listCompanySearch"
@@ -159,11 +163,11 @@
         android:layout_below="@id/codeNaf"
         android:layout_centerInParent="true"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:text="@string/no_result_found"
-        android:textColor="#616161"
+        android:textColor="#DF3F3F"
         android:textStyle="bold|italic"
         android:visibility="invisible" />
 

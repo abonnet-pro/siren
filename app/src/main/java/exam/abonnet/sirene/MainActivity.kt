@@ -4,13 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.icu.lang.UCharacter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.UserDictionary
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -42,7 +40,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var buttonReconnection: Button
     private lateinit var editPostal: EditText
     private lateinit var editDepartment: EditText
-    private lateinit var editNaf: EditText
+    private lateinit var editNaf: AutoCompleteTextView
     private lateinit var editActivity: AutoCompleteTextView
     private lateinit var svc: SirenService
 
@@ -114,9 +112,7 @@ class MainActivity : AppCompatActivity()
         override fun doInBackground(vararg params: String?): List<CodeNaf>?
         {
             val query = params[0] ?: return emptyList()
-            val listNaf = nafDAO.getNafByDescription(query)
-
-            return listNaf
+            return nafDAO.getNafByDescription(query)
         }
 
         override fun onPostExecute(result: List<CodeNaf>?)
@@ -126,6 +122,42 @@ class MainActivity : AppCompatActivity()
                     android.R.layout.simple_dropdown_item_1line, it)
             }
             editActivity.setAdapter(adapter)
+        }
+    }
+
+    inner class QueryCodeNafTask(): AsyncTask<String, Void, List<String>>()
+    {
+        override fun doInBackground(vararg params: String?): List<String>?
+        {
+            val query = params[0] ?: return emptyList()
+            val listNafCode = nafDAO.getNafCodeByDescription(query)
+
+            return listNafCode
+        }
+
+        override fun onPostExecute(result: List<String>?)
+        {
+            val adapter = result?.let {
+                ArrayAdapter<String>(this@MainActivity,
+                    android.R.layout.simple_dropdown_item_1line, it)
+            }
+            editNaf.setAdapter(adapter)
+        }
+    }
+
+    inner class QueryNafTask(): AsyncTask<String, Void, CodeNaf>()
+    {
+        override fun doInBackground(vararg params: String?): CodeNaf?
+        {
+            val query = params[0] ?: return null
+            val nafCode = nafDAO.getCodeNaf(query)
+
+            return nafCode
+        }
+
+        override fun onPostExecute(result: CodeNaf?)
+        {
+            editActivity.setText(result?.description)
         }
     }
 
@@ -212,6 +244,7 @@ class MainActivity : AppCompatActivity()
     {
         buttonSearchCompany.setOnClickListener {
             if (!checkInternetConnection()) return@setOnClickListener
+            if(!checkEntries()) return@setOnClickListener
             launchResearch()
         }
 
@@ -227,8 +260,25 @@ class MainActivity : AppCompatActivity()
         }
 
         editSearchCompany.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                myDataForm?.set("companyName", editSearchCompany.text.toString())
+            override fun afterTextChanged(s: Editable?)
+            {
+                val textSearchCompany = editSearchCompany.text.toString()
+                myDataForm?.set("companyName", textSearchCompany)
+
+                if(textSearchCompany.isEmpty())
+                {
+                    editNaf.isEnabled = false
+                    editActivity.isEnabled = false
+                    editPostal.isEnabled = false
+                    editDepartment.isEnabled = false
+                }
+                else
+                {
+                    editNaf.isEnabled = true
+                    editActivity.isEnabled = true
+                    editPostal.isEnabled = true
+                    editDepartment.isEnabled = true
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -241,6 +291,11 @@ class MainActivity : AppCompatActivity()
         editActivity.setOnItemClickListener { parent, view, position, id ->
             val naf = parent.getItemAtPosition(position) as CodeNaf
             editNaf.setText(naf.codeNAFAPE)
+        }
+
+        editNaf.setOnItemClickListener { parent, view, position, id ->
+            val codeNaf = parent.getItemAtPosition(position) as String
+            QueryNafTask().execute(codeNaf)
         }
 
         editActivity.addTextChangedListener(object : TextWatcher {
@@ -259,6 +314,7 @@ class MainActivity : AppCompatActivity()
         editNaf.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 myDataForm?.set("codeNaf", editNaf.text.toString())
+                QueryCodeNafTask().execute(editNaf.text.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -285,7 +341,6 @@ class MainActivity : AppCompatActivity()
             false
         }
 
-
         editDepartment.setOnTouchListener { v, event ->
             editPostal.text.clear()
             false
@@ -302,6 +357,58 @@ class MainActivity : AppCompatActivity()
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+    }
+
+    private fun checkEntries(): Boolean
+    {
+        var noError = true
+
+        if(editDepartment.length() == 1)
+        {
+            editDepartment.background = getDrawable(R.drawable.custom_research_wrong)
+            Toast.makeText(this@MainActivity, getString(R.string.wrong_entry), Toast.LENGTH_LONG).show()
+            noError = false
+        }
+        else
+        {
+            editDepartment.background = getDrawable(R.drawable.selector_edit)
+        }
+
+        if(editPostal.length() in 1..4)
+        {
+            editPostal.background = getDrawable(R.drawable.custom_research_wrong)
+            Toast.makeText(this@MainActivity, getString(R.string.wrong_entry), Toast.LENGTH_LONG).show()
+            noError = false
+        }
+        else
+        {
+            editPostal.background = getDrawable(R.drawable.selector_edit)
+        }
+
+        if(editActivity.text.toString().isNotEmpty() && editNaf.text.toString().isEmpty())
+        {
+            editActivity.background = getDrawable(R.drawable.custom_research_wrong)
+            Toast.makeText(this@MainActivity, getString(R.string.wrong_entry), Toast.LENGTH_LONG).show()
+            noError = false
+        }
+        else
+        {
+            editActivity.background = getDrawable(R.drawable.selector_edit)
+        }
+
+
+        if(editNaf.length() in 1..4)
+        {
+            editNaf.background = getDrawable(R.drawable.custom_research_wrong)
+            Toast.makeText(this@MainActivity, getString(R.string.wrong_entry), Toast.LENGTH_LONG).show()
+            noError = false
+        }
+        else
+        {
+            editNaf.background = getDrawable(R.drawable.selector_edit)
+        }
+
+        return noError
     }
 
     private fun checkBundle(savedInstanceState: Bundle?)
@@ -433,10 +540,7 @@ class MainActivity : AppCompatActivity()
                     .show()
 
                 buttonReconnection.visibility = View.VISIBLE
-                editSearchCompany.isEnabled = false
                 buttonSearchCompany.isEnabled = false
-                editPostal.isEnabled = false
-                editDepartment.isEnabled = false
                 return false
             }
             else
@@ -444,8 +548,6 @@ class MainActivity : AppCompatActivity()
                 buttonReconnection.visibility = View.INVISIBLE
                 editSearchCompany.isEnabled = true
                 buttonSearchCompany.isEnabled = true
-                editPostal.isEnabled = true
-                editDepartment.isEnabled = true
                 return true
             }
         }
@@ -462,10 +564,7 @@ class MainActivity : AppCompatActivity()
                 .show()
 
             buttonReconnection.visibility = View.VISIBLE
-            editSearchCompany.isEnabled = false
             buttonSearchCompany.isEnabled = false
-            editPostal.isEnabled = false
-            editDepartment.isEnabled = false
             return false
         }
     }
@@ -508,14 +607,19 @@ class MainActivity : AppCompatActivity()
             R.id.action_delete ->
             {
                 editSearchCompany.text.clear()
+                editSearchCompany.background = getDrawable(R.drawable.custom_research_enabled)
                 myDataForm?.set("companyName", "")
                 editDepartment.text.clear()
+                editDepartment.background = getDrawable(R.drawable.selector_edit)
                 myDataForm?.set("department", "")
                 editPostal.text.clear()
+                editPostal.background = getDrawable(R.drawable.selector_edit)
                 myDataForm?.set("postal", "")
                 editNaf.text.clear()
+                editNaf.background = getDrawable(R.drawable.selector_edit)
                 myDataForm?.set("codeNaf", "")
                 editActivity.text.clear()
+                editActivity.background = getDrawable(R.drawable.selector_edit)
                 myDataForm?.set("activity", "")
                 listCompanySearch.adapter = null
                 myDataList = ArrayList()
