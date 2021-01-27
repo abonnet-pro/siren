@@ -11,8 +11,9 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
                     var textQuery: String ="",
                     var archive:Boolean = false,
                     var department:String = "",
-                    var postCode:String = ""): Serializable
-
+                    var postCode:String = "",
+                    var codeNaf: String = "",
+                    var description: String = ""): Serializable
 {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

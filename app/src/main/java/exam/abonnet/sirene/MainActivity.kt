@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.icu.lang.UCharacter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.UserDictionary
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -17,6 +19,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import exam.abonnet.sirene.model.*
+import exam.abonnet.sirene.model.data.CodeNaf
 import exam.abonnet.sirene.model.data.Company
 import exam.abonnet.sirene.model.data.Link
 import exam.abonnet.sirene.model.data.Research
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var researchDAO: ResearchDAO
     private lateinit var companyDAO: CompanyDAO
     private lateinit var linkDAO: LinkDAO
+    private lateinit var nafDAO: CodeNafDAO
 
     private lateinit var progressBar: ProgressBar
     private lateinit var textNoResult: TextView
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity()
     private lateinit var buttonReconnection: Button
     private lateinit var editPostal: EditText
     private lateinit var editDepartment: EditText
+    private lateinit var editNaf: EditText
+    private lateinit var editActivity: AutoCompleteTextView
     private lateinit var svc: SirenService
 
     private val LAUNCH_HISTORY_ACTIVITY = 1
@@ -47,11 +53,10 @@ class MainActivity : AppCompatActivity()
     private var myDataList: ArrayList<Company>? = null
 
     inner class QueryCompanyTask(private val svc:SirenService,
-                                  private val listCompanySearch: ListView,
-                                  private val progressBar: ProgressBar,
-                                  private val textNoResult: TextView,
-                                 private val research: Research
-    ): AsyncTask<String, Void, List<Company>>()
+                                 private val listCompanySearch: ListView,
+                                 private val progressBar: ProgressBar,
+                                 private val textNoResult: TextView,
+                                 private val research: Research): AsyncTask<String, Void, List<Company>>()
     {
         override fun doInBackground(vararg params: String?): List<Company>?
         {
@@ -104,6 +109,26 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    inner class QueryActivityTask(): AsyncTask<String, Void, List<CodeNaf>>()
+    {
+        override fun doInBackground(vararg params: String?): List<CodeNaf>?
+        {
+            val query = params[0] ?: return emptyList()
+            val listNaf = nafDAO.getNafByDescription(query)
+
+            return listNaf
+        }
+
+        override fun onPostExecute(result: List<CodeNaf>?)
+        {
+            val adapter = result?.let {
+                ArrayAdapter<CodeNaf>(this@MainActivity,
+                    android.R.layout.simple_dropdown_item_1line, it)
+            }
+            editActivity.setAdapter(adapter)
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -117,8 +142,13 @@ class MainActivity : AppCompatActivity()
                 editSearchCompany.setText(research.textQuery)
                 editDepartment.text.clear()
                 editPostal.text.clear()
+                editNaf.text.clear()
+                editActivity.text.clear()
+
+                if(!research.codeNaf.isEmpty()) editNaf.setText(research.codeNaf)
                 if(!research.department.isEmpty()) editDepartment.setText(research.department)
                 if(!research.postCode.isEmpty()) editPostal.setText(research.postCode)
+                if(!research.description.isEmpty()) editActivity.setText(research.description)
 
                 val listCompany = researchDAO.getCompanyByResearch(researchId)
                 myDataList = listCompany as ArrayList<Company>
@@ -141,7 +171,7 @@ class MainActivity : AppCompatActivity()
             {
             }
         }
-}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -149,11 +179,23 @@ class MainActivity : AppCompatActivity()
         setContentView(R.layout.activity_main)
 
         val db = SirenDatabase.getDatabase(this)
+        val dbNaf = NafDatabase.getDatabase(this)
+
+        nafDAO = dbNaf.codeNafDAO()
         researchDAO = db.researchDAO()
         companyDAO = db.companyeDAO()
         linkDAO = db.linkDAO()
         svc = SirenService()
 
+        initializationView()
+        initializationListener()
+        checkInternetConnection()
+        checkMemoryResearch()
+        checkBundle(savedInstanceState)
+    }
+
+    private fun initializationView()
+    {
         progressBar = findViewById(R.id.progressBarSearchCompany)
         textNoResult = findViewById(R.id.textNoResult)
         buttonSearchCompany = findViewById(R.id.buttonSearchCompany)
@@ -162,17 +204,18 @@ class MainActivity : AppCompatActivity()
         buttonReconnection = findViewById(R.id.buttonReconnection)
         editDepartment = findViewById(R.id.editDepartment)
         editPostal = findViewById(R.id.editPostal)
+        editNaf = findViewById(R.id.editCodeNaf)
+        editActivity = findViewById(R.id.editActivity)
+    }
 
-        checkInternetConnection()
-        checkMemoryResearch()
-        checkBundle(savedInstanceState)
-
+    private fun initializationListener()
+    {
         buttonSearchCompany.setOnClickListener {
-            if(!checkInternetConnection()) return@setOnClickListener
+            if (!checkInternetConnection()) return@setOnClickListener
             launchResearch()
         }
 
-        listCompanySearch.setOnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+        listCompanySearch.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
             intent = Intent(this@MainActivity, DetailCompanyActivity::class.java)
             val company = listCompanySearch.getItemAtPosition(i) as Company
             intent.putExtra("company", company)
@@ -183,9 +226,8 @@ class MainActivity : AppCompatActivity()
             checkInternetConnection()
         }
 
-        editSearchCompany.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?)
-            {
+        editSearchCompany.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
                 myDataForm?.set("companyName", editSearchCompany.text.toString())
             }
 
@@ -196,9 +238,38 @@ class MainActivity : AppCompatActivity()
             }
         })
 
-        editDepartment.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?)
-            {
+        editActivity.setOnItemClickListener { parent, view, position, id ->
+            val naf = parent.getItemAtPosition(position) as CodeNaf
+            editNaf.setText(naf.codeNAFAPE)
+        }
+
+        editActivity.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                myDataForm?.set("activity", editNaf.text.toString())
+                QueryActivityTask().execute(editActivity.text.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        editNaf.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                myDataForm?.set("codeNaf", editNaf.text.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        editDepartment.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
                 myDataForm?.set("department", editDepartment.text.toString())
             }
 
@@ -220,9 +291,8 @@ class MainActivity : AppCompatActivity()
             false
         }
 
-        editPostal.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?)
-            {
+        editPostal.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
                 myDataForm?.set("postal", editPostal.text.toString())
             }
 
@@ -244,6 +314,8 @@ class MainActivity : AppCompatActivity()
             val name = myDataForm?.get("companyName")
             val post = myDataForm?.get("postal")
             val dep = myDataForm?.get("department")
+            val naf = myDataForm?.get("codeNaf")
+            val activity = myDataForm?.get("activity")
 
             if(name != null)
             {
@@ -256,6 +328,14 @@ class MainActivity : AppCompatActivity()
             if(dep != null)
             {
                 if(dep.isNotEmpty()) editDepartment.setText(dep)
+            }
+            if(naf != null)
+            {
+                if(naf.isNotEmpty()) editNaf.setText(naf)
+            }
+            if(activity != null)
+            {
+                if(activity.isNotEmpty()) editNaf.setText(activity)
             }
 
             if(!myDataList.isNullOrEmpty())
@@ -279,6 +359,8 @@ class MainActivity : AppCompatActivity()
         val textQuery = editSearchCompany.text.toString()
         val postalQuery = editPostal.text.toString()
         val departmentQuery = editDepartment.text.toString()
+        val nafQuery = editNaf.text.toString()
+        val activityQuery = editActivity.text.toString()
 
         if (textQuery.isEmpty())
         {
@@ -292,7 +374,7 @@ class MainActivity : AppCompatActivity()
             textNoResult.visibility = View.INVISIBLE
         }
 
-        val query = String.format(SirenService.queryUrl, textQuery, postalQuery, departmentQuery)
+        val query = String.format(SirenService.queryUrl, textQuery, postalQuery, departmentQuery, nafQuery)
         val researchId = researchDAO.checkRequestExist(query)
         if (researchId != null)
         {
@@ -319,7 +401,9 @@ class MainActivity : AppCompatActivity()
                 dateRequest = dateRequest,
                 textQuery = textQuery,
                 postCode = postalQuery,
-                department = departmentQuery
+                department = departmentQuery,
+                codeNaf = nafQuery,
+                description = activityQuery
             )
 
             QueryCompanyTask(svc, listCompanySearch, progressBar, textNoResult, research).execute(
@@ -429,8 +513,13 @@ class MainActivity : AppCompatActivity()
                 myDataForm?.set("department", "")
                 editPostal.text.clear()
                 myDataForm?.set("postal", "")
+                editNaf.text.clear()
+                myDataForm?.set("codeNaf", "")
+                editActivity.text.clear()
+                myDataForm?.set("activity", "")
                 listCompanySearch.adapter = null
                 myDataList = ArrayList()
+                textNoResult.visibility = View.INVISIBLE
                 true
             }
             else -> super.onOptionsItemSelected(item)

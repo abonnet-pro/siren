@@ -26,6 +26,7 @@
     <string name="department">Departement : </string>
     <string name="department_hint">Dep.</string>
     <string name="postal_hint">Postal.</string>
+    <string name="code_naf_hint">Naf.</string>
     <string name="postal">Code postal :</string>
     <string name="history">Historique</string>
     <string name="recent">Aujourd\'hui</string>
@@ -33,4 +34,8 @@
     <string name="company">Entreprise</string>
     <string name="request_history">Recherche : </string>
     <string name="title_delete">Supprimer la sélection</string>
+    <string name="codeNaf">Code NAF :</string>
+    <string name="activity">Activité :</string>
+    <string name="activity_hint">Nom activité</string>
+    <string name="naf">Code NAF :</string>
 </resources>

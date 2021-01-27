@@ -90,11 +90,58 @@
         android:maxLength="5"
         android:textAlignment="center" />
 
+    <TextView
+        android:id="@+id/codeNaf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/department"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/codeNaf"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editCodeNaf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editDepartment"
+        android:layout_alignTop="@id/codeNaf"
+        android:layout_alignBottom="@id/codeNaf"
+        android:layout_toEndOf="@id/codeNaf"
+        android:background="@drawable/custom_research"
+        android:hint="@string/code_naf_hint"
+        android:maxLength="5"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/postal"
+        android:layout_toEndOf="@id/editCodeNaf"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/activity"
+        android:textStyle="bold" />
+
+    <AutoCompleteTextView
+        android:id="@+id/editActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editPostal"
+        android:layout_alignTop="@id/activity"
+        android:layout_alignBottom="@id/activity"
+        android:layout_toEndOf="@id/activity"
+        android:background="@drawable/custom_research"
+        android:hint="@string/activity_hint" />
+
+
+
     <ListView
         android:id="@+id/listCompanySearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/editDepartment"
+        android:layout_below="@id/codeNaf"
         android:padding="10dp" />
 
     <ProgressBar
@@ -109,7 +156,7 @@
         android:id="@+id/textNoResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editPostal"
+        android:layout_below="@id/codeNaf"
         android:layout_centerInParent="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"

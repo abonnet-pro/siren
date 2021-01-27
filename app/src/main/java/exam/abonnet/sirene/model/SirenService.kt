@@ -17,7 +17,7 @@ class SirenService
         val queryUrlCompany = "$apiUrlText/%s?per_page=100"
         val queryUrlCompanyPostal = "$apiUrlText/%s?per_page=100&code_postal=%s"
         val queryUrlCompanyDepartment = "$apiUrlText/%s?per_page=100&departement=%s"
-        val queryUrl = "$apiUrlText/%s?per_page=100&code_postal=%s&departement=%s"
+        val queryUrl = "$apiUrlText/%s?per_page=100&code_postal=%s&departement=%s&activite_principale=%s"
     }
 
     fun getCompany(query: String): List<Company>
