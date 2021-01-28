@@ -1,10 +1,10 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
-import exam.abonnet.sirene.model.data.Link
+import com.esimed.sirene.model.data.Link
 
 @Dao
 interface LinkDAO

@@ -1,12 +1,12 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import exam.abonnet.sirene.model.data.Company
-import exam.abonnet.sirene.model.data.Link
-import exam.abonnet.sirene.model.data.Research
+import com.esimed.sirene.model.data.Company
+import com.esimed.sirene.model.data.Link
+import com.esimed.sirene.model.data.Research
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +22,6 @@ abstract class SirenDatabase : RoomDatabase()
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH)
         val sdfCompany = SimpleDateFormat("yyyyMMdd", Locale.FRENCH)
         var INSTANCE: SirenDatabase? = null
-
 
         fun getDatabase(context: Context): SirenDatabase
         {

@@ -1,13 +1,12 @@
-package exam.abonnet.sirene
+package com.esimed.sirene
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import exam.abonnet.sirene.model.data.Research
+import com.esimed.sirene.model.data.Research
 
 class ResearchHistoryAdapter(private val activity: Context, private val ressource:Int, private val listResearch: List<Research>) :  ArrayAdapter<Research>(activity, ressource, listResearch)
 {

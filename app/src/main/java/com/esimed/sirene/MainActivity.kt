@@ -1,4 +1,4 @@
-package exam.abonnet.sirene
+package com.esimed.sirene
 
 import android.app.Activity
 import android.content.Context
@@ -17,11 +17,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import exam.abonnet.sirene.model.*
-import exam.abonnet.sirene.model.data.CodeNaf
-import exam.abonnet.sirene.model.data.Company
-import exam.abonnet.sirene.model.data.Link
-import exam.abonnet.sirene.model.data.Research
+import com.esimed.sirene.model.*
+import com.esimed.sirene.model.data.CodeNaf
+import com.esimed.sirene.model.data.Company
+import com.esimed.sirene.model.data.Link
+import com.esimed.sirene.model.data.Research
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity()
     private val MY_DATA_KEYS_LIST = "myDataList"
     private var myDataForm: HashMap<String, String>? = null
     private var myDataList: ArrayList<Company>? = null
+    private val DAY_MAX_ARCHIVE = 90
+    private val MILLISECONDS = 1000
+    private val SECONDS = 1000
+    private val MINUTS = 1000
+    private val HOURS = 1000
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                  private val listCompanySearch: ListView,
@@ -571,14 +576,13 @@ class MainActivity : AppCompatActivity()
                     .show()
 
                 buttonReconnection.visibility = View.VISIBLE
-                buttonSearchCompany.isEnabled = false
+                buttonSearchCompany.isClickable = false
                 return false
             }
             else
             {
                 buttonReconnection.visibility = View.INVISIBLE
-                editSearchCompany.isEnabled = true
-                buttonSearchCompany.isEnabled = true
+                buttonSearchCompany.isClickable = true
                 return true
             }
         }
@@ -595,7 +599,7 @@ class MainActivity : AppCompatActivity()
                 .show()
 
             buttonReconnection.visibility = View.VISIBLE
-            buttonSearchCompany.isEnabled = false
+            buttonSearchCompany.isClickable = false
             return false
         }
     }
@@ -617,6 +621,25 @@ class MainActivity : AppCompatActivity()
                 }
             }
         }
+
+        val listResearchArchive = researchDAO.getAllResearchArchive()
+        for(research in listResearchArchive)
+        {
+            val dat = SirenDatabase.sdf.parse(research.dateRequest)
+            val today = Date()
+            if(getDayDifference(dat, today) > DAY_MAX_ARCHIVE)
+            {
+                researchDAO.delete(research)
+            }
+        }
+    }
+
+    private fun getDayDifference(firstDate: Date, secondDate: Date): Int
+    {
+        val firstDateTime = (firstDate.time / MILLISECONDS / SECONDS / MINUTS / HOURS).toInt()
+        val secondDateDateTime = (secondDate.time / MILLISECONDS / SECONDS / MINUTS / HOURS).toInt()
+
+        return secondDateDateTime - firstDateTime
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean

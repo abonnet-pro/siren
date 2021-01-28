@@ -1,4 +1,4 @@
-package exam.abonnet.sirene
+package com.esimed.sirene
 
 import org.junit.Test
 

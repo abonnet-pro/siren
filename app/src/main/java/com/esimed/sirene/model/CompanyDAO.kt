@@ -1,7 +1,7 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import androidx.room.*
-import exam.abonnet.sirene.model.data.Company
+import com.esimed.sirene.model.data.Company
 
 @Dao
 interface CompanyDAO

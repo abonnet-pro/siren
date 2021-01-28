@@ -1,8 +1,8 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import androidx.room.*
-import exam.abonnet.sirene.model.data.Company
-import exam.abonnet.sirene.model.data.Research
+import com.esimed.sirene.model.data.Company
+import com.esimed.sirene.model.data.Research
 
 @Dao
 interface ResearchDAO
@@ -25,9 +25,12 @@ interface ResearchDAO
     @Query("SELECT * FROM Research WHERE archive = 0")
     fun getAllResearchActive(): List<Research>
 
+    @Query("SELECT * FROM Research WHERE archive = 1")
+    fun getAllResearchArchive(): List<Research>
+
     @Query("SELECT * FROM research WHERE archive = 0 ORDER BY id DESC")
     fun getAllRecentResearch(): List<Research>
 
-    @Query("SELECT * FROM research WHERE archive = 1 ORDER BY dateRequest ASC, id DESC")
+    @Query("SELECT * FROM research WHERE archive = 1 ORDER BY id DESC")
     fun getAllPreviousResearch(): List<Research>
 }

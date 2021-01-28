@@ -1,16 +1,19 @@
-package exam.abonnet.sirene
+package com.esimed.sirene
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import exam.abonnet.sirene.model.CompanyDAO
-import exam.abonnet.sirene.model.LinkDAO
-import exam.abonnet.sirene.model.ResearchDAO
-import exam.abonnet.sirene.model.SirenDatabase
-import exam.abonnet.sirene.model.data.Research
+import com.esimed.sirene.model.CompanyDAO
+import com.esimed.sirene.model.LinkDAO
+import com.esimed.sirene.model.ResearchDAO
+import com.esimed.sirene.model.SirenDatabase
+import com.esimed.sirene.model.data.Research
 
 class HistoryActivity : AppCompatActivity()
 {
@@ -59,6 +62,29 @@ class HistoryActivity : AppCompatActivity()
             finish()
         }
 
+        listRecent.setOnItemLongClickListener { parent, view, position, id ->
+            val research = listRecent.getItemAtPosition(position) as Research
+
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Archiver la recherche ?")
+            builder.setCancelable(true)
+            builder.setPositiveButton("Oui") { _: DialogInterface, _: Int ->
+                research.archive = true
+                researchDAO.update(research)
+                val listRecentSearch = researchDAO.getAllRecentResearch()
+                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentSearch)
+                val listPreviousSearch = researchDAO.getAllPreviousResearch()
+                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousSearch)
+            }
+            builder.setNegativeButton("Non") { dialogInterface: DialogInterface, _: Int ->
+                dialogInterface.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+
+            true
+        }
+
         findViewById<ImageButton>(R.id.buttonRecent).setOnClickListener {
             if(listRecent.adapter != null)
             {
@@ -67,7 +93,8 @@ class HistoryActivity : AppCompatActivity()
             }
             else
             {
-                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
+                val listRecentSearch = researchDAO.getAllRecentResearch()
+                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentSearch)
                 buttonRecent.background = getDrawable(android.R.drawable.arrow_down_float)
             }
         }
@@ -80,7 +107,8 @@ class HistoryActivity : AppCompatActivity()
             }
             else
             {
-                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentResearch)
+                val listRecentSearch = researchDAO.getAllRecentResearch()
+                listRecent.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listRecentSearch)
                 buttonRecent.background = getDrawable(android.R.drawable.arrow_down_float)
             }
         }
@@ -93,7 +121,8 @@ class HistoryActivity : AppCompatActivity()
             }
             else
             {
-                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousResearch)
+                val listPreviousSearch = researchDAO.getAllPreviousResearch()
+                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousSearch)
                 buttonPrevious.background = getDrawable(android.R.drawable.arrow_down_float)
             }
         }
@@ -106,7 +135,8 @@ class HistoryActivity : AppCompatActivity()
             }
             else
             {
-                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousResearch)
+                val listPreviousSearch = researchDAO.getAllPreviousResearch()
+                listPrevious.adapter = ResearchHistoryAdapter(this, R.layout.history_list, listPreviousSearch)
                 buttonPrevious.background = getDrawable(android.R.drawable.arrow_down_float)
             }
         }

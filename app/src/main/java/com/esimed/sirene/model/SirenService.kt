@@ -1,12 +1,10 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
-import android.graphics.BitmapFactory
 import android.util.JsonReader
 import android.util.JsonToken
-import exam.abonnet.sirene.model.data.Company
+import com.esimed.sirene.model.data.Company
 import java.io.IOException
 import java.net.URL
-import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
 class SirenService
@@ -61,6 +59,8 @@ class SirenService
                                 "code_postal" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.postalCode = reader.nextString()
                                 "date_debut_activite" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.dateStartActivity = reader.nextString()
                                 "libelle_nature_juridique_entreprise" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.status = reader.nextString()
+                                "longitude" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.longitude = reader.nextString()
+                                "latitude" -> if(reader.peek() == JsonToken.NULL) reader.skipValue() else company.latitude = reader.nextString()
                                 else -> reader.skipValue()
                             }
                         }

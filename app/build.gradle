@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "exam.abonnet.sirene"
+        applicationId "com.esimed.sirene"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
@@ -37,5 +37,5 @@ dependencies {
     def room_version = "2.2.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
+    compile 'com.google.android.gms:play-services-maps:17.0.0'
 }

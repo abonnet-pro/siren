@@ -1,8 +1,8 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import androidx.room.Dao
 import androidx.room.Query
-import exam.abonnet.sirene.model.data.CodeNaf
+import com.esimed.sirene.model.data.CodeNaf
 
 @Dao
 interface CodeNafDAO

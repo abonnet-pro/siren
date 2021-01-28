@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
+        android:padding="5dp"
         android:text="@string/text_recherche"
         android:textStyle="bold" />
 
@@ -112,6 +112,7 @@
         android:layout_alignEnd="@id/editPostal"
         android:layout_toEndOf="@id/activity"
         android:background="@drawable/selector_edit"
+        android:layout_alignStart="@id/editDepartment"
         android:maxLines="1"
         android:inputType="text"
         android:enabled="false"
@@ -136,6 +137,7 @@
         android:layout_alignBottom="@id/codeNaf"
         android:layout_toEndOf="@id/codeNaf"
         android:background="@drawable/selector_edit"
+        android:layout_alignStart="@id/editActivity"
         android:hint="@string/code_naf_hint"
         android:maxLength="5"
         android:enabled="false"

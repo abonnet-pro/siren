@@ -1,8 +1,7 @@
-package exam.abonnet.sirene.model.data
+package com.esimed.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import exam.abonnet.sirene.R
 import java.io.Serializable
 
 @Entity
@@ -17,6 +16,8 @@ data class Company(@PrimaryKey(autoGenerate = true) var id:Long? = null,
                    var sirenNumber: String = "",
                    var siretNumber:String = "",
                    var status: String = "",
+                   var longitude: String = "",
+                   var latitude: String = "",
                    var archive:Boolean = false): Serializable
 {
     override fun equals(other: Any?): Boolean {

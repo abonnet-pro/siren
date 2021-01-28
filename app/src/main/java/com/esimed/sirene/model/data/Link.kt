@@ -1,4 +1,4 @@
-package exam.abonnet.sirene.model.data
+package com.esimed.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

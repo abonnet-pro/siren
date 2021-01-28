@@ -1,10 +1,10 @@
-package exam.abonnet.sirene.model
+package com.esimed.sirene.model
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import exam.abonnet.sirene.model.data.CodeNaf
+import com.esimed.sirene.model.data.CodeNaf
 
 @Database(entities = [CodeNaf::class], version = 1)
 abstract class NafDatabase : RoomDatabase()

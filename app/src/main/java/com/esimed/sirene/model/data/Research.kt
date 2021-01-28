@@ -1,4 +1,4 @@
-package exam.abonnet.sirene.model.data
+package com.esimed.sirene.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -15,7 +15,8 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
                     var codeNaf: String = "",
                     var description: String = ""): Serializable
 {
-    override fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean
+    {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
@@ -26,11 +27,13 @@ data class Research(@PrimaryKey(autoGenerate = true) var id:Long? = null,
         return true
     }
 
-    override fun hashCode(): Int {
+    override fun hashCode(): Int
+    {
         return id?.hashCode() ?: 0
     }
 
-    override fun toString(): String {
+    override fun toString(): String
+    {
         return if(department == "" && postCode == "")
             "$dateRequest $textQuery"
         else if(department == "")
