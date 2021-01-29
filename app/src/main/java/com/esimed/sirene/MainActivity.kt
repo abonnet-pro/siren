@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity()
     private var myDataList: ArrayList<Company>? = null
     private val DAY_MAX_ARCHIVE = 90
     private val MILLISECONDS = 1000
-    private val SECONDS = 1000
-    private val MINUTS = 1000
-    private val HOURS = 1000
+    private val SECONDS = 60
+    private val MINUTS = 60
+    private val HOURS = 24
 
     inner class QueryCompanyTask(private val svc:SirenService,
                                  private val listCompanySearch: ListView,
@@ -537,7 +537,8 @@ class MainActivity : AppCompatActivity()
             {
                 textNoResult.visibility = View.VISIBLE
             }
-        } else {
+        }
+        else {
             val dateRequest = SirenDatabase.sdf.format(Date())
             val research = Research(
                 request = query,
@@ -627,7 +628,7 @@ class MainActivity : AppCompatActivity()
         {
             val dat = SirenDatabase.sdf.parse(research.dateRequest)
             val today = Date()
-            if(getDayDifference(dat, today) > DAY_MAX_ARCHIVE)
+            if(getDayDifference(dat, today) > 90)
             {
                 researchDAO.delete(research)
             }
